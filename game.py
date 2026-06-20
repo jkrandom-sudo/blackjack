@@ -171,7 +171,7 @@ class BlackjackGame:
             pass
 
         # Save score
-        ans = self._ask(self.t("save_score_q")).lower()
+        ans = self._ask(self.t("save_score_q", yes_no=self.t("yes_no"))).lower()
         if ans in ("y", "yes", "是"):
             self.scoreboard.add(self.player_name, self.chips, self.rounds)
             self._print(self.t("score_saved"))
@@ -259,8 +259,11 @@ class BlackjackGame:
             elif action in ("s", "stand", "停"):
                 break
             elif action in ("d", "double", "加"):
-                if self.chips < bet * 2 or len(self.player) != 2:
-                    self._print(self.t("invalid_bet"))
+                if len(self.player) != 2:
+                    self._print(self.t("double_not_allowed"))
+                    continue
+                if self.chips < bet * 2:
+                    self._print(self.t("not_enough_chips"))
                     continue
                 bet *= 2
                 doubled = True
